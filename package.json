@@ -1,0 +1,41 @@
+{
+  "name": "passport-chaira",
+  "version": "0.0.1",
+  "description": "Chairá authentication strategy for Passport",
+  "main": "./lib/",
+  "scripts": {
+    "test": "jest ./test",
+    "build": "babel src --out-dir lib",
+    "prepublish": "npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cdiaz/passport-chaira.git"
+  },
+  "keywords": [
+    "passport",
+    "udla",
+    "authentication",
+    "uniamazonia",
+    "chaira"
+  ],
+  "author": {
+    "name": "Cristiam Díaz",
+    "email": "c.diaz@udla.edu.co"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/cdiaz/passport-chaira/issues"
+  },
+  "homepage": "https://github.com/cdiaz/passport-chaira#readme",
+  "dependencies": {
+    "passport-oauth2": "^1.4.0"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-plugin-add-module-exports": "^0.2.1",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-stage-0": "^6.24.1",
+    "jest": "^23.5.0"
+  }
+}
