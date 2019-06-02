@@ -1,14 +1,14 @@
-import OAuth2Strategy from 'passport-oauth2';
+import { Strategy as OAuth2Strategy, InternalOAuthError } from "passport-oauth2";
 
-const baseURL = path => `http://chaira.udla.edu.co/api/v0.1/oauth2/${path}`;
+const baseURL = path => `https://chaira.udla.edu.co/ChairaApi/${path}`;
 
 const defaultOptions = {
   scopeSeparator: ',',
-  authorizationURL: baseURL('authorize.asmx/auth'),
-  tokenURL: baseURL('authorize.asmx/token'),
-  userProfileURL: baseURL('resource.asmx/scope'),
+  authorizationURL: baseURL('oauth2/auth'),
+  tokenURL: baseURL('oauth2/token'),
+  userProfileURL: baseURL('consultar?recurso=GjR9jrQ4mrF'),
   state: true,
-  customHeaders: { 'Content-Type': 'application/json' }
+  customHeaders: {'Content-Type': 'application/json'}
 }
 
 export default class Strategy extends OAuth2Strategy {
@@ -30,7 +30,7 @@ export default class Strategy extends OAuth2Strategy {
     this.name = 'chaira';
     this._userProfileURL = options.userProfileURL;
 
-    this._oauth2.getOAuthAccessToken = function (code, params, callback) {
+    this._oauth2.getOAuthAccessToken = (code, params, callback) => {
       this._request(
         'POST',
         this._getAccessTokenUrl(),
@@ -53,25 +53,35 @@ export default class Strategy extends OAuth2Strategy {
     }
   }
 
-  userProfile(accessToken, callback) {
+  userProfile(accessToken, done) {
+    var headers = {
+      'Authorization': accessToken
+    }
     this._oauth2._request(
-      'POST',
+      'GET',
       this._userProfileURL,
-      this._oauth2._customHeaders,
-      JSON.stringify({
-        access_token: accessToken,
-        scope: 'public_profile'
-      }),
+      headers,
+      null,
       null,
       (err, body, response) => {
-        if (err) { return done(new Error('Failed to fetch user profile', err)) }
-        if (response.statusCode === 403) { return callback(403, null) }
-        let { description: raw } = JSON.parse(body.replace('{"d":null}', ''));
+        if (err) {
+          return done(new InternalOAuthError('Failed to fetch user profile', err))
+        }
         try {
-          let profile = JSON.parse(raw)[0];
-          callback(null, profile);
+          let { data: user } = JSON.parse(body.replace('{"d":null}', ''));
+          user = user[0]
+          const profile = {
+            provider: 'chaira',
+            id: user.ID_USUARIO,
+            displayName: user.NOMBRE,
+            email: user.CORREO,
+            picture: user.FOTO,
+            gender: user.GENERO,
+            age: user.EDAD
+          };
+          return done(null, profile)
         } catch (e) {
-          callback(e);
+          done(e);
         }
       }
     )

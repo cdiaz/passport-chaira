@@ -19,18 +19,9 @@ $ npm install passport-chaira
 
 ## Usage
 
-#### Create an Application
-
-Before using `passport-chaira`, you must register an application in Chairá for Developers.
-If you have not already done so, a new application can be created at
-[Chairá devs](htts://chaira.udla.edu.co/api_dev).
-Your application will be issued a client ID and client
-secret, which need to be provided to the strategy. You will also need to
-configure a callback URL which matches the route in your application.
-
 #### Configure Strategy
 
-The Chairá authentication strategy authenticates users using a Chairá account and OAuth tokens. The strategy requires a verify callback, which accepts these credentials and calls done providing a user, as well as options specifying a client ID, client secret, and callback URL.
+The Chairá authentication strategy authenticates users using a Chairá account and OAuth 2.0 tokens. The strategy requires a verify callback, which accepts these credentials and calls done providing a user, as well as options specifying a client ID, client secret, and callback URL.
 
 ```js
 var ChairaStrategy = require('passport-chaira').Strategy;
@@ -42,7 +33,7 @@ passport.use(new ChairaStrategy({
     state: true
   },
   function(accessToken, refreshToken, profile, cb) {
-    console.log(accessToken, refreshToken, profile);
+    console.log(accessToken, profile);
   }
 ));
 ```
@@ -60,7 +51,7 @@ app.get('/auth/chaira',
   passport.authenticate('chaira'));
 
 app.get('/auth/chaira/callback', 
-  passport.authenticate('chaira', { failureRedirect: '/login' }),
+  passport.authenticate('chaira', { failureRedirect: '/' }),
   function(req, res) {
     // Successful authentication, redirect home.
     res.redirect('/');
