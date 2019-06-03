@@ -30,7 +30,7 @@ export default class Strategy extends OAuth2Strategy {
     this.name = 'chaira';
     this._userProfileURL = options.userProfileURL;
 
-    this._oauth2.getOAuthAccessToken = (code, params, callback) => {
+    this._oauth2.getOAuthAccessToken = function (code, params, callback) {
       this._request(
         'POST',
         this._getAccessTokenUrl(),
