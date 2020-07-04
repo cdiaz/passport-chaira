@@ -1,6 +1,6 @@
 {
   "name": "passport-chaira",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "Chairá authentication strategy for Passport",
   "main": "./lib/",
   "scripts": {

@@ -1,6 +1,6 @@
 import { Strategy as OAuth2Strategy, InternalOAuthError } from "passport-oauth2";
 
-const baseURL = path => `https://chaira.udla.edu.co/ChairaApi/${path}`;
+const baseURL = path => `https://chaira.uniamazonia.edu.co/ChairaApi/${path}`;
 
 const defaultOptions = {
   scopeSeparator: ',',
@@ -72,12 +72,15 @@ export default class Strategy extends OAuth2Strategy {
           user = user[0]
           const profile = {
             provider: 'chaira',
-            id: user.ID_USUARIO,
+            userId: user.ID_USUARIO,
+            id: user.IDENTIFICACION,
             displayName: user.NOMBRE,
             email: user.CORREO,
             picture: user.FOTO,
             gender: user.GENERO,
-            age: user.EDAD
+            age: user.EDAD,
+            role: user.ROL,
+            issuingCity: user.LUGAR_EXPEDICION
           };
           return done(null, profile)
         } catch (e) {
